@@ -1,23 +1,23 @@
-2019:
-  name: 2019
+Y2019:
+  name: Y2019
 
-2020:
-  name: 2020
+Y2020:
+  name: Y2020
 
 active:
   name: active
 
 challenges:
-  name: server
+  name: challenges
 
 easy:
-  name: server
+  name: easy
 
 hackthebox:
-  name: server
+  name: hackthebox
 
 linux:
-  name: server
+  name: linux
 
 windows:
-  name: server
+  name: windows
