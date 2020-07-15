@@ -1,6 +1,6 @@
 permalink: /:year:month:day/:title
 url: https://wither.github.io
-baseurl: /
+baseurl: /project
 
 # variables
 name: wither
