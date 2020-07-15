@@ -1,6 +1,6 @@
 ---
 layout: default
-title: "Level 21-22"
+title: "21-22"
 tags: banditoverthewire
 ---
 
