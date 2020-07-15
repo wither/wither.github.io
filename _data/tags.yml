@@ -15,3 +15,6 @@ linux:
 
 windows:
   name: windows
+
+banditoverthewire:
+  name: banditoverthewire
