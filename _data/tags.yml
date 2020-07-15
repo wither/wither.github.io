@@ -1,17 +1,23 @@
-2019y:
-  name: 2019y
+2019:
+  name: 2019
 
-iOS:
-  name: iOS
+2020:
+  name: 2020
 
-project:
-  name: project
+active:
+  name: active
 
-study:
-  name: study
+challenges:
+  name: server
 
-2020y:
-  name: 2020y
+easy:
+  name: server
 
-server:
+hackthebox:
+  name: server
+
+linux:
+  name: server
+
+windows:
   name: server
