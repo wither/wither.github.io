@@ -24,6 +24,8 @@ categories: thm ad
 
 # Enumeration
 ---
+The initial network scope looks like this:
+![image of initial network map][/assets/img/posts/throwback/network_layout.webp]
 Using nmap for initial enumeration, I discovered 3 of the in-scope machines and their open ports, as well as the name of the domain that they're apart of.
 
 *** Command ***
