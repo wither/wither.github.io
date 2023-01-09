@@ -2,7 +2,7 @@
 layout: post
 title:  "Throwback Writeup"
 date:   2023-01-09 20:37:00 +0000
-categories: thm
+categories: thm ad
 ---
 
 ![throwback logo banner image](/assets/img/posts/throwback/banner.webp)
