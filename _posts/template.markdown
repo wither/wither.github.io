@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "Test Post"
-date:   2023-01-09
-categories: Test
+date:   2023-01-09 21:37:00 +0000
+categories: test
 ---
 
 Test Post
