@@ -1,4 +1,3 @@
-# HackTheBox/CTF writeups and more!
----------
-# https://wither.github.io
---------
+# My Blog
+---
+Here I will post CTF, lab and network writups, about certifications and courses, miscellaneous computer projects and more. Mainly for personal reference. 
