@@ -2,10 +2,10 @@
 layout: post
 title:  "Throwback Writeup"
 date:   2023-01-09 20:37:00 +0000
-categories: thm ad
+categories: thm
 ---
 
-![Throwback logo banner image](/assets/img/posts/throwback/banner.webp)
+![throwback logo banner image](/assets/img/posts/throwback/banner.webp)
 
 [Throwback] in Active Directory lab that teaches the fundamentals and core concepts of attacking a Windows network. The network simulates a realistic corporate environment that has several attack vectors you would expect to find in today’s organisations.
 
