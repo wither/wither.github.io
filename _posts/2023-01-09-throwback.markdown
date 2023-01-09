@@ -5,6 +5,8 @@ date:   2023-01-09 20:37:00 +0000
 categories: thm ad
 ---
 
+[!Throwback logo banner image][/assets/img/posts/throwback/banner.webp]
+
 [Throwback] in Active Directory lab that teaches the fundamentals and core concepts of attacking a Windows network. The network simulates a realistic corporate environment that has several attack vectors you would expect to find in today’s organisations.
 
 # Contents
@@ -33,7 +35,7 @@ Using nmap for initial enumeration, I discovered 3 of the in-scope machines and 
 nmap -sV -sC -p- -v 10.200.29.0/24 --min-rate 5000
 ```
 
-*** THROWBACK-FW01 *** (10.200.29.219)
+**THROWBACK-FW01** (10.200.29.219)
 ```shell
 PORT    STATE SERVICE  VERSION
 22/tcp  open  ssh      OpenSSH 7.5 (protocol 2.0)
@@ -62,7 +64,7 @@ SF-Port53-TCP:V=7.93%I=7%D=1/8%Time=63BB2F58%P=x86_64-pc-linux-gnu%r(DNSVe
 SF:rsionBindReqTCP,E,"\0\x0c\0\x06\x81\x05\0\0\0\0\0\0\0\0");
 ```
 
-*** THROWBACK-MAIL *** (10.200.29.232)
+**THROWBACK-MAIL** (10.200.29.232)
 ```shell
 PORT    STATE SERVICE  VERSION
 22/tcp  open  ssh      OpenSSH 7.6p1 Ubuntu 4ubuntu0.3 (Ubuntu Linux; protocol 2.0)
@@ -106,7 +108,7 @@ PORT    STATE SERVICE  VERSION
 Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 ```
 
-***THROWBACK-PROD*** (10.200.29.219)
+**THROWBACK-PROD** (10.200.29.219)
 ```
 PORT      STATE SERVICE       VERSION
 22/tcp    open  ssh           OpenSSH for_Windows_7.7 (protocol 2.0)
@@ -153,11 +155,6 @@ Host script results:
 | smb2-security-mode:
 |   311:
 |_    Message signing enabled but not required
-```
-
-Testing functionality
-```bash
-Of the blog!
 ```
 
 [Throwback]: https://tryhackme.com/room/throwback
