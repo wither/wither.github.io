@@ -5,7 +5,7 @@ date:   2023-01-09 20:37:00 +0000
 categories: thm ad
 ---
 
-[!Throwback logo banner image](/assets/img/posts/throwback/banner.webp)
+![Throwback logo banner image](/assets/img/posts/throwback/banner.webp)
 
 [Throwback] in Active Directory lab that teaches the fundamentals and core concepts of attacking a Windows network. The network simulates a realistic corporate environment that has several attack vectors you would expect to find in today’s organisations.
 
@@ -26,8 +26,10 @@ categories: thm ad
 
 # Enumeration
 ---
+
 The initial network scope looks like this:
 ![image of initial network map](/assets/img/posts/throwback/network_layout.webp)
+
 Using nmap for initial enumeration, I discovered 3 of the in-scope machines and their open ports, as well as the name of the domain that they're apart of.
 
 **Command**
