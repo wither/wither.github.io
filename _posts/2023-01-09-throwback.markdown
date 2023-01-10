@@ -21,7 +21,10 @@ categories: thm
  - [Brute-forcing](#brute-forcing)
  - [Phishing](#phishing)
  - [LLMNR Poisoning](#llmnr-poisoning)
-4. [THROWBACK-PROD](#throwback-prod)
+4. [THROWBACK-PROD](#throwback-prod)i
+ - [Post Exploitation Framework](#post-exploitation-framework)
+ - [Enumeration](#enumeration-with-seatbelt)
+ - [Privilege Escalation](#privilege-escalation)
 
 # Enumeration
 ---
@@ -294,7 +297,7 @@ And successfully cracked PetersJ's password `Throwback317`:
 
 ## THROWBACK-PROD
 
-### Post Exploitation
+### Post Exploitation Framework
 
 Post exploitation, I used the [Empire](https://github.com/EmpireProject/Empire) framework as well as [Starkiller](https://github.com/BC-SECURITY/Starkiller), a front-end for it.
 
@@ -311,13 +314,15 @@ And that opened access to the Starkiller panel running on localhost:
 
 To begin further exploitation, I needed to setup a listener and a stager for PetersJ to run, to use the account as an agent.
 
-To do this I firstly created a HTTP listener from the **listeners** tab:
+To do this I firstly created a HTTP listener from the listeners tab:
 
 ![starkiller listener](/assets/img/posts/throwback/24_starkiller_listener.webp)
 
 Then I made the stager, a Windows batch file to be ran on the compromised workstation:
 
 ![starkiller stager](/assets/img/posts/throwback/25_starkiller_stager.webp)
+
+### Enumeration with Seatbelt
 
 With all of that set up, now it was time for some post exploitation enumeration using **Seatbelt** from [Ghostpacks Compiled Binaries](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries). To use this with Starkiller, I firstly needed to RDP into the machine as PetersJ using this xfreerdp command:
 
@@ -326,6 +331,30 @@ xfreerdp /u:PetersJ /p:'Throwback317' /v:10.200.29.219
 ```
 
 ![xfreerdp](/assets/img/posts/throwback/26_xfreerdp.webp)
+
+Once I was in, I downloaded both the `launcher.bat` and `seatbelt.exe` files from a webserver on my machine:
+
+![wget seatbelt and launcher](/assets/img/posts/throwback/27_wget.webp)
+
+Then, I ran the stager on WS01 in powershell to load the user as an agent in Starkiller.
+
+![agent](/assets/img/posts/throwback/28_agent.webp)
+
+Now that I had an agent, I executed the `powershell/situational_awareness/host/seatbelt` Empire module to begin enumeration.
+
+![seatbelt empire module](/assets/img/posts/throwback/29_seatbelt_module.webp)
+
+This produced a lot of output, but the main focus is the CredEnum result, showing an admin user by the name of **admin-petersj** has saved credentials on the machine.
+
+![seatbelt output](/assets/img/posts/throwback/30_admin_petersj.webp)
+
+### Privilege Escalation
+
+Using that username , I was able to utilise the `runas` command to use the saved credentials and execute `cmd.exe`, essentially escalating my privileges:
+```shell
+runas /savecred /user:admin-petersj /profile "cmd.exe"
+```
+![privesc to admin-petersj](/assets/img/posts/throwback/31_petersj_privesc.webp)
 
 
 [Throwback]: https://tryhackme.com/room/throwback
