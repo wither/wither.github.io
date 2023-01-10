@@ -17,6 +17,8 @@ categories: thm
  - [Flags](#flags)
  - [Credentials](#credentials)
 3. [THROWBACK-MAIL](#throwback-mail)
+ - [Flags](#flags)
+ - [Brute-forcing](#brute-forcing)
 4. [THROWBACK-PROD](#throwback-prod)
 
 # Enumeration
@@ -192,10 +194,54 @@ Also in `/var/logs/` I found the unusual log `login.log`, which contained encryp
 
 ![humphreyws credentials in login.log](/assets/img/posts/throwback/6_humphreyw_creds.webp)
 
-His password was easily cracked using [Crackstation](https://crackstation.net/)
+His password was easily cracked using [Crackstation](https://crackstation.net/):
 
 ![humphreyws cracked password](/assets/img/posts/throwback/7_humphrey_cracked.webp)
 
-And thats all I was able to get out of this machine for now.
+## Throwback MAIL
+---
+
+### Logging in
+
+This is the mail server, which also has a web interface and login page. The guest credentials to login `tbhguest:WelcomeTBH1!` were hardcoded just above the form.
+
+![mail interface guest credentials](/assets/img/posts/throwback/8_mail_login.webp)
+
+### Flags
+
+I found the first flag in the **Welcome** email in the inbox:
+
+![first flag](/assets/img/posts/throwback/9_flag1.webp)
+
+And the second flag in the address book:
+
+![second flag](/assets/img/posts/throwback/10_flag2.webp)
+
+The address book also more importantly contained a list of employee names and emails, which I compiled into seperate documents to use later on.
+
+![list of usernames and emails](/assets/img/posts/throwback/11_emails_and_usernames.webp)
+
+### Brute-forcing
+
+I decided to use the username list and along with a small list of commonly used passwords to bruteforce the employee credentials.
+
+![lists of usernames and passwords](/assets/img/posts/throwback/12_users_pass_lists.webp)
+
+First, I captured the login request to the server using a web proxy and **BurpSuite**, to take note of the field identifiers to use in **Hydra**.
+
+![burpsuite login request](/assets/img/posts/throwback/13_burp_request.webp)
+
+Then, I used this Hydra command:
+```shell
+hydra -L mail_users.txt -P mail_pass.txt 10.200.29.232 http-post-form '/src/redirect.php:login_username=^USER^&secretkey=^PASS^:F=Unknown user or password incorrect.' -I
+```
+
+And successfully found these users' passwords:
+![hydra found passwords](/assets/img/posts/throwback/14_hydra_found.webp)
+
+
+
+
+
 
 [Throwback]: https://tryhackme.com/room/throwback
