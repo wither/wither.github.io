@@ -163,7 +163,7 @@ Host script results:
 ---
 Going to the firewall's web interface, it confirmed that it is running **pfsense**, which has an administrator login.
 
-![pfsense login page](/assets/img/posts/throwback/1_pfsense_login_page.png)
+![pfsense login page](/assets/img/posts/throwback/1_pfsense_login_page.webp)
 
 However, the default crededntials were never changed and therefore, I was able to simply login to the panel using the  default credentials `admin:pfsense`.
 
