@@ -14,17 +14,18 @@ categories: thm
 2. [THROWBACK-FW01](#throwback-fw01)
  - [Logging In](#logging-in)
  - [Reverse Shell](#reverse-shell)
- - [Flags](#flags)
+ - [Flags](#flags-3-&-4)
  - [Credentials](#credentials)
 3. [THROWBACK-MAIL](#throwback-mail)
- - [Flags](#flags)
+ - [Flags](#flags-1-&-2)
  - [Brute-forcing](#brute-forcing)
  - [Phishing](#phishing)
  - [LLMNR Poisoning](#llmnr-poisoning)
-4. [THROWBACK-PROD](#throwback-prod)i
+4. [THROWBACK-PROD](#throwback-prod)
  - [Post Exploitation Framework](#post-exploitation-framework)
  - [Enumeration](#enumeration-with-seatbelt)
  - [Privilege Escalation](#privilege-escalation)
+ - [Flags](#flags 5,-6-&-7)
 
 # Enumeration
 ---
@@ -181,7 +182,7 @@ Then, after poking around what the panel has to offer, I found a diagnostics pag
 
 ![reverse shell from my machine](/assets/img/posts/throwback/4_pfsense_root.webp)
 
-### Flags
+### Flags 3 & 4
 
 Using the following command, I was able to find search for .txt files on the machine to find the flags.
 
@@ -265,7 +266,7 @@ And got a meterpreter shell as the user **BlaireJ** on their workstation:
 ![meterpreter shell](/assets/img/posts/throwback/17_meterpreter_shell.webp)
 
 
-### Flags
+### Flags 1 & 2
 
 From here, I found the 2 flags for the machine with ease. The first being on BlaireJ's desktop:
 ![flag 5](/assets/img/posts/throwback/18_flag5.webp)
@@ -356,5 +357,9 @@ runas /savecred /user:admin-petersj /profile "cmd.exe"
 ```
 ![privesc to admin-petersj](/assets/img/posts/throwback/31_petersj_privesc.webp)
 
+### Flags 5, 6 & 7
+
+From here, I was able to read all three flags on the PROD machine:
+![prod flags](/assets/img/posts/throwback/32_prod_flags.webp)
 
 [Throwback]: https://tryhackme.com/room/throwback
