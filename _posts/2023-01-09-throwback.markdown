@@ -17,13 +17,7 @@ categories: thm
  - [Flags](#flags)
  - [Credentials](#credentials)
 3. [THROWBACK-MAIL](#throwback-mail)
- - [So](#)
- - [Cool!](#)
- - [Cool!](#)
-3. [THROWBACK-PROD](#throwback-prod)
- - [So](#)
- - [Cool!](#)
- - [Cool!](#)
+4. [THROWBACK-PROD](#throwback-prod)
 
 # Enumeration
 ---
