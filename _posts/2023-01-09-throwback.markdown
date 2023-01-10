@@ -328,7 +328,7 @@ Then I made the stager, a Windows batch file to be ran on the compromised workst
 
 ### Enumeration with Seatbelt
 
-With all of that set up, now it was time for some post exploitation enumeration using **Seatbelt** from [Ghostpacks Compiled Binaries](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries). To use this with Starkiller, I firstly needed to RDP into the machine as PetersJ using this xfreerdp command:
+With all of that set up, now it was time for some post exploitation enumeration using **Seatbelt** from [Ghostpacks Compiled Binaries](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries). To use this with Starkiller, I firstly needed to RDP into the machine as PetersJ using this **xfreerdp** command:
 
 ```shell
 xfreerdp /u:PetersJ /p:'Throwback317' /v:10.200.29.219
@@ -340,7 +340,7 @@ Once I was in, I downloaded both the `launcher.bat` and `seatbelt.exe` files fro
 
 ![wget seatbelt and launcher](/assets/img/posts/throwback/27_wget.webp)
 
-Then, I ran the stager on WS01 in powershell to load the user as an agent in Starkiller.
+Then, I ran the stager in powershell to load the user as an agent in Starkiller.
 
 ![agent](/assets/img/posts/throwback/28_agent.webp)
 
