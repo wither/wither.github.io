@@ -163,17 +163,17 @@ Host script results:
 ---
 Going to the firewall's web interface, it confirmed that it is running **pfsense**, which has an administrator login.
 
-![pfsense login page](/assets/img/posts/1_pfsense_login_page.png)
+![pfsense login page](/assets/img/posts/throwback/1_pfsense_login_page.png)
 
 However, the default crededntials were never changed and therefore, I was able to simply login to the panel using the  default credentials `admin:pfsense`.
 
-![logged in to pfsense panel](/assets/img/posts/2_pfsense_admin.webp)
+![logged in to pfsense panel](/assets/img/posts/throwback/2_pfsense_admin.webp)
 
 Then, after poking around what the panel has to offer, I found a diagnostics page (under Diagonistics > Command Prompt), which conveniently allowed for code execution in both bash shell and PHP form, as well as file upload and download. So naturally, I executed [this](https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php) PHP reverse shell in the interface, opened a listener on my machine, and got root access to THROWBACK-FW01. That was easy.
 
-![php reverse shell in diagnostics tab](/assets/img/posts/3_pfsense_phprs.webp)
+![php reverse shell in diagnostics tab](/assets/img/posts/throwback/3_pfsense_phprs.webp)
 
-![reverse shell from my machine](/assets/img/posts/4_pfsense_root.webp)
+![reverse shell from my machine](/assets/img/posts/throwback/4_pfsense_root.webp)
 
 Using the following command, I was able to find search for .txt files on the machine to find the flags.
 
@@ -183,15 +183,15 @@ find / -iname "*.txt" 2>&1
 
 This way, I found flags 3 and 4.
 
-![flags 3 and 4](/assets/img/posts/5_fw01_flags.webp)
+![flags 3 and 4](/assets/img/posts/throwback/5_fw01_flags.webp)
 
 Also in `/var/logs/` I found the unusual log `login.log`, which contained encrypted credentials to a user **HumphreyW**.
 
-![humphreyws credentials in login.log](/assets/img/posts/6_humphreyw_creds.webp)
+![humphreyws credentials in login.log](/assets/img/posts/throwback/6_humphreyw_creds.webp)
 
 His password was easily cracked using [Crackstation](https://crackstation.net/)
 
-![humphreyws cracked password](/assets/img/posts/7_humphrey_cracked.webp)
+![humphreyws cracked password](/assets/img/posts/throwback/7_humphrey_cracked.webp)
 
 And thats all I was able to get out of this machine for now.
 
