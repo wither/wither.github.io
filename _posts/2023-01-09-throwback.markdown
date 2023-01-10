@@ -19,9 +19,10 @@ categories: thm
 3. [THROWBACK-MAIL](#throwback-mail)
  - [Flags](#mail-flags)
  - [Brute-forcing](#brute-forcing)
+4. [THROWBACK WS01](#throwback-ws01)
  - [Phishing](#phishing)
  - [LLMNR Poisoning](#llmnr-poisoning)
-4. [THROWBACK-PROD](#throwback-prod)
+5. [THROWBACK-PROD](#throwback-prod)
  - [Post Exploitation Framework](#post-exploitation-framework)
  - [Enumeration](#enumeration-with-seatbelt)
  - [Privilege Escalation](#privilege-escalation)
@@ -245,8 +246,11 @@ hydra -L mail_users.txt -P mail_pass.txt 10.200.29.232 http-post-form '/src/redi
 And successfully found these users' passwords:
 ![hydra found passwords](/assets/img/posts/throwback/14_hydra_found.webp)
 
-### Phishing
+## THROWBACK WS01
 ---
+
+### Phishing
+
 At this point however, I needed a way to move to another machine on the network. And the next target was WS01, an employee workstation.
 
 To get access to a workstation, I chose to launch a phishing campaign against the employee email list, posing as IT support, telling employee's to update the note-taking software they're using, which would actually be a reverse shell pointing back to me.
@@ -265,8 +269,7 @@ Setup a handler using msfconsole:
 And got a meterpreter shell as the user **BlaireJ** on their workstation:
 ![meterpreter shell](/assets/img/posts/throwback/17_meterpreter_shell.webp)
 
-
-### Flags 1 & 2
+### WS01 Flags
 
 From here, I found the 2 flags for the machine with ease. The first being on BlaireJ's desktop:
 ![flag 5](/assets/img/posts/throwback/18_flag5.webp)
