@@ -19,6 +19,8 @@ categories: thm
 3. [THROWBACK-MAIL](#throwback-mail)
  - [Flags](#flags)
  - [Brute-forcing](#brute-forcing)
+ - [Phishing](#phishing)
+ - [LLMNR Poisoning](#llmnr-poisoning)
 4. [THROWBACK-PROD](#throwback-prod)
 
 # Enumeration
@@ -289,5 +291,41 @@ hashcat -m 5600 -r OneRuleToRuleThemAll.rule --force petersj.hash.txt /content/w
 
 And successfully cracked PetersJ's password `Throwback317`:
 ![petersjs password cracked](/assets/img/posts/throwback/21_petersj_cracked.webp)
+
+## THROWBACK-PROD
+
+### Post Exploitation
+
+Post exploitation, I used the [Empire](https://github.com/EmpireProject/Empire) framework as well as [Starkiller](https://github.com/BC-SECURITY/Starkiller), a front-end for it.
+
+Very easily setup and ran with:
+```shell
+sudo ./ps-empire server
+sudo ./starkiller-1.12.0.AppImage --no-sandbox
+```
+
+![empire and starkiller setup](/assets/img/posts/throwback/22_empire_starkiller.webp)
+
+And that opened access to the Starkiller panel running on localhost:
+![starkiller](/assets/img/posts/throwback/23_starkiller_interface.webp)
+
+To begin further exploitation, I needed to setup a listener and a stager for PetersJ to run, to use the account as an agent.
+
+To do this I firstly created a HTTP listener from the **listeners** tab:
+
+![starkiller listener](/assets/img/posts/throwback/24_starkiller_listener.webp)
+
+Then I made the stager, a Windows batch file to be ran on the compromised workstation:
+
+![starkiller stager](/assets/img/posts/throwback/25_starkiller_stager.webp)
+
+With all of that set up, now it was time for some post exploitation enumeration using **Seatbelt** from [Ghostpacks Compiled Binaries](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries). To use this with Starkiller, I firstly needed to RDP into the machine as PetersJ using this xfreerdp command:
+
+```shell
+xfreerdp /u:PetersJ /p:'Throwback317' /v:10.200.29.219
+```
+
+![xfreerdp](/assets/img/posts/throwback/26_xfreerdp.webp)
+
 
 [Throwback]: https://tryhackme.com/room/throwback
