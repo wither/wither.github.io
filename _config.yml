@@ -21,7 +21,7 @@
 title: wither
 #email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Blog
+  blog
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://wither.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: w7ther

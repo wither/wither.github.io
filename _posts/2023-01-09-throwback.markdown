@@ -2,7 +2,7 @@
 layout: post
 title:  "Throwback Writeup"
 date:   2023-01-09 20:37:00 +0000
-categories: thm ad
+categories: thm
 ---
 
 ![throwback logo banner image](/assets/img/posts/throwback/banner.webp)
@@ -10,16 +10,16 @@ categories: thm ad
 [Throwback] in Active Directory lab that teaches the fundamentals and core concepts of attacking a Windows network. The network simulates a realistic corporate environment that has several attack vectors you would expect to find in today’s organisations.
 
 # Contents
-1. [Network Enumeration](# Enumeration)
-2. [THROWBACK-FW01](# Firewall)
+1. [Network Enumeration](#Enumeration)
+2. [THROWBACK-FW01](#throwback-fw01)
  - [of](#)
  - [Contents](#)
  - [Test](#)
-3. [THROWBACK-MAIL](# Mail Server)
+3. [THROWBACK-MAIL](#throwback-mail)
  - [So](#)
  - [Cool!](#)
  - [Cool!](#)
-3. [THROWBACK-PROD](# Web Server)
+3. [THROWBACK-PROD](#throwback-prod)
  - [So](#)
  - [Cool!](#)
  - [Cool!](#)
@@ -158,5 +158,41 @@ Host script results:
 |   311:
 |_    Message signing enabled but not required
 ```
+
+## Throwback FW01
+---
+Going to the firewall's web interface, it confirmed that it is running **pfsense**, which has an administrator login.
+
+![pfsense login page](/assets/img/posts/1_pfsense_login_page.png)
+
+However, the default crededntials were never changed and therefore, I was able to simply login to the panel using the  default credentials `admin:pfsense`.
+
+![logged in to pfsense panel](/assets/img/posts/2_pfsense_admin.webp)
+
+Then, after poking around what the panel has to offer, I found a diagnostics page (under Diagonistics > Command Prompt), which conveniently allowed for code execution in both bash shell and PHP form, as well as file upload and download. So naturally, I executed [this](https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php) PHP reverse shell in the interface, opened a listener on my machine, and got root access to THROWBACK-FW01. That was easy.
+
+![PHP reverse shell in diagnostics tab](/assets/img/posts/3_pfsense_phprs.webp)
+
+![Reverse shell from my machine](/assets/img/posts/4_pfsense_root.webp)
+
+Using the following command, I was able to find search for .txt files on the machine to find the flags.
+
+```shell
+find / -iname "*.txt" 2>&1
+```
+
+This way, I found flags 3 and 4.
+
+![Flags 3 and 4](/assets/img/posts/5_fw01_flags.webp)
+
+Also in `/var/logs/` I found the unusual log `login.log`, which contained encrypted credentials to a user **HumphreyW**.
+
+![HumphreyW credentials in login.log](/assets/img/posts/6_humphreyw_creds.webp)
+
+His password was easily cracked using [Crackstation](https://crackstation.net/)
+
+![HumphreyWs cracked password](/assets/img/posts/7_humphrey_cracked.webp)
+
+And thats all I was able to get out of this machine for now.
 
 [Throwback]: https://tryhackme.com/room/throwback
