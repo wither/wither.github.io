@@ -170,7 +170,7 @@ Going to the firewall's web interface, it confirmed that it is running **pfsense
 
 ### Logging In
 
-However, the default crededntials were never changed and therefore, I was able to simply login to the panel using the  default credentials `admin:pfsense`.
+However, the default credentials were never changed and therefore, I was able to simply login to the panel using the  default credentials `admin:pfsense`.
 
 ![logged in to pfsense panel](/assets/img/posts/throwback/2_pfsense_admin.webp)
 
