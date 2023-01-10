@@ -14,10 +14,10 @@ categories: thm
 2. [THROWBACK-FW01](#throwback-fw01)
  - [Logging In](#logging-in)
  - [Reverse Shell](#reverse-shell)
- - [Flags](#flags-3-&-4)
+ - [Flags](#fw01-flags)
  - [Credentials](#credentials)
 3. [THROWBACK-MAIL](#throwback-mail)
- - [Flags](#flags-1-&-2)
+ - [Flags](#mail-flags)
  - [Brute-forcing](#brute-forcing)
  - [Phishing](#phishing)
  - [LLMNR Poisoning](#llmnr-poisoning)
@@ -25,7 +25,7 @@ categories: thm
  - [Post Exploitation Framework](#post-exploitation-framework)
  - [Enumeration](#enumeration-with-seatbelt)
  - [Privilege Escalation](#privilege-escalation)
- - [Flags](#flags 5,-6-&-7)
+ - [Flags](#prod-flags)
 
 # Enumeration
 ---
@@ -182,7 +182,7 @@ Then, after poking around what the panel has to offer, I found a diagnostics pag
 
 ![reverse shell from my machine](/assets/img/posts/throwback/4_pfsense_root.webp)
 
-### Flags 3 & 4
+### FW01 Flags
 
 Using the following command, I was able to find search for .txt files on the machine to find the flags.
 
@@ -213,7 +213,7 @@ This is the mail server, which also has a web interface and login page. The gues
 
 ![mail interface guest credentials](/assets/img/posts/throwback/8_mail_login.webp)
 
-### Flags
+### MAIL Flags
 
 I found the first flag in the **Welcome** email in the inbox:
 
@@ -357,7 +357,7 @@ runas /savecred /user:admin-petersj /profile "cmd.exe"
 ```
 ![privesc to admin-petersj](/assets/img/posts/throwback/31_petersj_privesc.webp)
 
-### Flags 5, 6 & 7
+### PROD Flags
 
 From here, I was able to read all three flags on the PROD machine:
 ![prod flags](/assets/img/posts/throwback/32_prod_flags.webp)
