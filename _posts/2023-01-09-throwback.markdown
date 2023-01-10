@@ -10,7 +10,7 @@ categories: thm
 [Throwback] in Active Directory lab that teaches the fundamentals and core concepts of attacking a Windows network. The network simulates a realistic corporate environment that has several attack vectors you would expect to find in today’s organisations.
 
 # Contents
-1. [Network Enumeration](#Enumeration)
+1. [Network Enumeration](#enumeration)
 2. [THROWBACK-FW01](#throwback-fw01)
  - [Logging In](#logging-in)
  - [Reverse Shell](#reverse-shell)
