@@ -28,7 +28,7 @@ categories: thm
  - [Privilege Escalation](#privilege-escalation)
  - [Flags](#prod-flags)
 6. [THROWBACK TIME](#throwback-time)
- - [Dumping Hashes & Passwords](#dumping-hashes-and-passwords) 
+ - [Dumping Hashes and Passwords](#dumping-hashes-and-passwords) 
 
 ## Enumeration
 ---
