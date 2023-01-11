@@ -21,6 +21,7 @@ categories: thm
  - [Brute-forcing](#brute-forcing)
 4. [THROWBACK WS01](#throwback-ws01)
  - [Phishing](#phishing)
+ - [Flags](#ws01-flags)
  - [LLMNR Poisoning](#llmnr-poisoning)
 5. [THROWBACK-PROD](#throwback-prod)
  - [Post Exploitation Framework](#post-exploitation-framework)
