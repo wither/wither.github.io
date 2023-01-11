@@ -9,7 +9,7 @@ categories: thm
 
 [Throwback] in Active Directory lab that teaches the fundamentals and core concepts of attacking a Windows network. The network simulates a realistic corporate environment that has several attack vectors you would expect to find in today’s organisations.
 
-# Contents
+## Contents
 1. [Network Enumeration](#enumeration)
 2. [THROWBACK-FW01](#throwback-fw01)
  - [Logging In](#logging-in)
@@ -28,9 +28,9 @@ categories: thm
  - [Privilege Escalation](#privilege-escalation)
  - [Flags](#prod-flags)
 6. [THROWBACK TIME](#throwback-time)
- - 
+ - [Dumping Hashes & Passwords](#dumping-hashes-&-passwords) 
 
-# Enumeration
+## Enumeration
 ---
 
 The initial network scope looks like this:
@@ -165,19 +165,19 @@ Host script results:
 |_    Message signing enabled but not required
 ```
 
-# Throwback FW01
+## Throwback FW01
 ---
 Going to the firewall's web interface, it confirmed that it is running **pfsense**, which has an administrator login.
 
 ![pfsense login page](/assets/img/posts/throwback/1_pfsense_login_page.webp)
 
-## Logging In
+### Logging In
 
 However, the default credentials were never changed and therefore, I was able to simply login to the panel using the  default credentials `admin:pfsense`.
 
 ![logged in to pfsense panel](/assets/img/posts/throwback/2_pfsense_admin.webp)
 
-## Reverse Shell
+### Reverse Shell
 
 Then, after poking around what the panel has to offer, I found a diagnostics page (under Diagonistics > Command Prompt), which conveniently allowed for code execution in both bash shell and PHP form, as well as file upload and download. So naturally, I executed [this](https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php) PHP reverse shell in the interface, opened a listener on my machine, and got root access to THROWBACK-FW01. That was easy.
 
@@ -185,7 +185,7 @@ Then, after poking around what the panel has to offer, I found a diagnostics pag
 
 ![reverse shell from my machine](/assets/img/posts/throwback/4_pfsense_root.webp)
 
-## FW01 Flags
+### FW01 Flags
 
 Using the following command, I was able to find search for .txt files on the machine to find the flags.
 
@@ -197,7 +197,7 @@ This way, I found flags 3 and 4.
 
 ![flags 3 and 4](/assets/img/posts/throwback/5_fw01_flags.webp)
 
-## Credentials
+### Credentials
 
 Also in `/var/logs/` I found the unusual log `login.log`, which contained encrypted credentials to a user **HumphreyW**.
 
@@ -207,16 +207,16 @@ His password was easily cracked using [Crackstation](https://crackstation.net/):
 
 ![humphreyws cracked password](/assets/img/posts/throwback/7_humphrey_cracked.webp)
 
-# Throwback MAIL
+## Throwback MAIL
 ---
 
-## Logging in
+### Logging in
 
 This is the mail server, which also has a web interface and login page. The guest credentials to login `tbhguest:WelcomeTBH1!` were hardcoded just above the form.
 
 ![mail interface guest credentials](/assets/img/posts/throwback/8_mail_login.webp)
 
-## MAIL Flags
+### MAIL Flags
 
 I found the first flag in the **Welcome** email in the inbox:
 
@@ -230,7 +230,7 @@ The address book also more importantly contained a list of employee names and em
 
 ![list of usernames and emails](/assets/img/posts/throwback/11_emails_and_usernames.webp)
 
-## Brute-forcing
+### Brute-forcing
 
 I decided to use the username list and along with a small list of commonly used passwords to bruteforce the employee credentials.
 
@@ -250,10 +250,10 @@ And successfully found these users' passwords:
 
 ![hydra found passwords](/assets/img/posts/throwback/14_hydra_found.webp)
 
-# THROWBACK WS01
+## THROWBACK WS01
 ---
 
-## Phishing
+### Phishing
 
 At this point however, I needed a way to move to another machine on the network. And the next target was WS01, an employee workstation.
 
@@ -277,7 +277,7 @@ And got a meterpreter shell as the user **BlaireJ** on their workstation:
 
 ![meterpreter shell](/assets/img/posts/throwback/17_meterpreter_shell.webp)
 
-## WS01 Flags
+### WS01 Flags
 
 From here, I found the 2 flags for the machine with ease. The first being on BlaireJ's desktop:
 
@@ -287,7 +287,7 @@ And the second on HumphreyW's desktop:
 
 ![flag 6](/assets/img/posts/throwback/19_flag6.webp)
 
-## LLMNR Poisoning
+### LLMNR Poisoning
 
 Then, with the shell open, I used this responder command:
 
@@ -310,9 +310,9 @@ hashcat -m 5600 -r OneRuleToRuleThemAll.rule --force petersj.hash.txt /content/w
 And successfully cracked PetersJ's password `Throwback317`:
 ![petersjs password cracked](/assets/img/posts/throwback/21_petersj_cracked.webp)
 
-# THROWBACK-PROD
+## THROWBACK-PROD
 
-## Post Exploitation Framework
+### Post Exploitation Framework
 
 Post exploitation, I used the [Empire](https://github.com/EmpireProject/Empire) framework as well as [Starkiller](https://github.com/BC-SECURITY/Starkiller), a front-end for it.
 
@@ -338,7 +338,7 @@ Then I made the stager, a Windows batch file to be ran on the compromised workst
 
 ![starkiller stager](/assets/img/posts/throwback/25_starkiller_stager.webp)
 
-## Enumeration with Seatbelt
+### Enumeration with Seatbelt
 
 With all of that set up, now it was time for some post exploitation enumeration using **Seatbelt** from [Ghostpacks Compiled Binaries](https://github.com/r3motecontrol/Ghostpack-CompiledBinaries). To use this with Starkiller, I firstly needed to RDP into the PROD machine as PetersJ using this **xfreerdp** command:
 
@@ -364,7 +364,7 @@ This produced a lot of output, but the main focus is the CredEnum result, showin
 
 ![seatbelt output](/assets/img/posts/throwback/30_admin_petersj.webp)
 
-## Privilege Escalation
+### Privilege Escalation
 
 Using that username , I was able to utilise the `runas` command to use the saved credentials and execute `cmd.exe`, essentially escalating my privileges:
 
@@ -374,15 +374,15 @@ runas /savecred /user:admin-petersj /profile "cmd.exe"
 
 ![privesc to admin-petersj](/assets/img/posts/throwback/31_petersj_privesc.webp)
 
-## PROD Flags
+### PROD Flags
 
 From here, I was able to read all three flags on the PROD machine:
 
 ![prod flags](/assets/img/posts/throwback/32_prod_flags.webp)
 
-# THROWBACK TIME
+## THROWBACK TIME
 
-## Dumping Hashes & Passwords
+### Dumping Hashes & Passwords
 
 Now that I had elevated privilages, I could run the stager in the command prompt and use admin-petersj as a privilaged agent: 
 
