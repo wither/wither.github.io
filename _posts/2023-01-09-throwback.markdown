@@ -10,6 +10,7 @@ categories: thm
 [Throwback] in Active Directory lab that teaches the fundamentals and core concepts of attacking a Windows network. The network simulates a realistic corporate environment that has several attack vectors you would expect to find in today’s organisations.
 
 ## Contents
+---
 1. [Network Enumeration](#enumeration)
 2. [THROWBACK-FW01](#throwback-fw01)
  - [Logging In](#logging-in)
@@ -23,12 +24,13 @@ categories: thm
  - [Phishing](#phishing)
  - [Flags](#ws01-flags)
  - [LLMNR Poisoning](#llmnr-poisoning)
+ - [More Flags](#dc01-flag)
+ - [Kerberoasting](#kerberoasting)
 5. [THROWBACK-PROD](#throwback-prod)
  - [Post Exploitation Framework](#post-exploitation-framework)
  - [Enumeration](#enumeration-with-seatbelt)
  - [Privilege Escalation](#privilege-escalation)
  - [Flags](#prod-flags)
-6. [THROWBACK TIME](#throwback-time)
  - [Dumping Hashes and Passwords](#dumping-hashes-and-passwords) 
 
 ## Enumeration
@@ -315,6 +317,7 @@ And successfully cracked PetersJ's password `Throwback317`:
 ![petersjs password cracked](/assets/img/posts/throwback/21_petersj_cracked.webp)
 
 ## THROWBACK-PROD
+---
 
 ### Post Exploitation Framework
 
@@ -437,7 +440,7 @@ proxychains xfreerdp /u:BlaireJ /p:'7eQgx6YzxgG3vC45t5k9' /v:
 
 At the same time, I setup [BloodHound](https://github.com/BloodHoundAD/BloodHound) with a neo4j backend to begin enumerating the Active Directory:
 
-![bloodhound login](/assets/img/posts/throwback/bloodhound_login.webp)
+![bloodhound login](/assets/img/posts/throwback/40_bloodhound_login.webp)
 
 Now, with Bloodhound setup and full access to the domain user BlaireJ, I could start collecting data. To do this, I used a PowerShell collector called [SharpHound](https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1). I imported it into PowerShell, and told it to collect all the data it could on the Active Directory:
 
@@ -459,12 +462,20 @@ And was able to query the data for very specific information. This included a fu
 
 One of which contained a flag (flag 15):
 
-![domain admin with flag](/assets/img/posts/throwback/44_bloodhound_flag.webp)
+![domain admin with flag](/assets/img/posts/throwback/45_bloodhound_flag.webp)
 
-BloodHound also allowed me to query for **kerbaroastable** accounts, one of which being the account **sqlservice**, for - suprisingly - the SQL database running on one of the machines:
+### Kerberoasting
 
-![
+BloodHound also allowed me to query for kerbaroastable accounts, one of which being the account **sqlservice**, for - suprisingly - the SQL database running on one of the machines:
 
-## F
+![sqlservice is kerbaroastable](/assets/img/posts/throwback/46_bloodhound_sqlservice.webp)
+
+To perform the attack on the sqlservice account, I used Impacket's [GetUserSPNs](https://github.com/fortra/impacket/blob/master/examples/GetUserSPNs.py) script, to recieve a kerberos ticket containing the user's NTLM hash.
+
+![kerberoasting sqlservice](/assets/img/posts/throwback/47_getuserspn_sqlservice.webp)
+
+To decrypt the ticket and crack the password hash, I again used penglab and hashcat to get the accounts password `mysql337570`:
+
+![cracking ticket](/assets/img/posts/throwback/48_sqlservice_cracked.webp)
 
 [Throwback]: https://tryhackme.com/room/throwback
