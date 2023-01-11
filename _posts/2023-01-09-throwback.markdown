@@ -356,11 +356,11 @@ Once I was in, I downloaded both the `launcher.bat` and `seatbelt.exe` files fro
 
 ![wget seatbelt and launcher](/assets/img/posts/throwback/27_wget.webp)
 
-Then, I ran the stager in powershell to load the user as an agent in Starkiller.
+Then, I ran the stager in PowerShell to load the user as an agent in Starkiller.
 
 ![agent](/assets/img/posts/throwback/28_agent.webp)
 
-Now that I had an agent, I executed the `powershell/situational_awareness/host/seatbelt` Empire module to begin enumeration.
+Now that I had an agent, I executed the `PowerShell/situational_awareness/host/seatbelt` Empire module to begin enumeration.
 
 ![seatbelt empire module](/assets/img/posts/throwback/29_seatbelt_module.webp)
 
@@ -384,7 +384,7 @@ From here, I was able to read all three flags on the PROD machine (flags 7, 8 & 
 
 ![prod flags](/assets/img/posts/throwback/32_prod_flags.webp)
 
-## THROWBACK TIME
+## THROWBACK-WS01
 ---
 
 ### Dumping Hashes and Passwords
@@ -404,5 +404,67 @@ There's a lot of output in the report:
 Luckily, Starkiller formats the output cleanly to into the credentials tab:
 
 ![mimikatz creds](/assets/img/posts/throwback/36_mimikatz_creds.webp)
+
+## THROWBACK-WS01
+---
+
+I had to return to WS01, a machine that could allow me to pivot through the domain trusts into the next network.
+
+### Pivoting
+
+To move deeper, I needed to pivot. To begin this process, I firstly setup a reverse shell on the PROD machine, a meterpreter listener and then autoroute via msfconsole:
+
+![autoroute](/assets/img/posts/throwback/37_autoroute.webp)
+
+After that I setup a SOCKS4 proxy with proxychains and msfconsole's `socks_proxy` auxiliary module, and used this **crackmapexec** command:
+
+```shell
+proxychains -q crackmapexec smb 10.200.29.0/24 -p 1080 -u Bla
+ireJ -d THROWBACK -H c374ecb7c2ccac1df3a82bce4f80bb5b
+```
+
+![proxychains crackmapexec](/assets/img/posts/throwback/38_crackmapexec.webp)
+
+However, I needed access to WS01 in order to pivot fur
+ther but this shows that I could do that through the domain user BlaireJ. To access BlaireJ's account on WS01, I used RDP again but this time through the proxy with this command:
+
+```shell
+proxychains xfreerdp /u:BlaireJ /p:'7eQgx6YzxgG3vC45t5k9' /v:
+10.200.29.222
+```
+
+![blairej rdp through proxy](/assets/img/posts/throwback/39_blairej_rdp.webp)
+
+At the same time, I setup [BloodHound](https://github.com/BloodHoundAD/BloodHound) with a neo4j backend to begin enumerating the Active Directory:
+
+![bloodhound login](/assets/img/posts/throwback/bloodhound_login.webp)
+
+Now, with Bloodhound setup and full access to the domain user BlaireJ, I could start collecting data. To do this, I used a PowerShell collector called [SharpHound](https://github.com/BloodHoundAD/BloodHound/blob/master/Collectors/SharpHound.ps1). I imported it into PowerShell, and told it to collect all the data it could on the Active Directory:
+
+![sharphound collection in powershell](/assets/img/posts/throwback/41_sharphound_collection.webp)
+
+Once the collection was completed, I transfered the data over to my machine using proxychains and scp:
+
+![sharphound data scp](/assets/img/posts/throwback/42_sharphound_scp.webp)
+
+From there, I uploaded it into BloodHound:
+
+![bloodhound data upload](/assets/img/posts/throwback/43_bloodhound_import.webp)
+
+And was able to query the data for very specific information. This included a full list of domain admin accounts for example:
+
+![bloodhound listing domain admins](/assets/img/posts/throwback/44_bloodhound_da.webp)
+
+### DC01 Flag
+
+One of which contained a flag (flag 15):
+
+![domain admin with flag](/assets/img/posts/throwback/44_bloodhound_flag.webp)
+
+BloodHound also allowed me to query for **kerbaroastable** accounts, one of which being the account **sqlservice**, for - suprisingly - the SQL database running on one of the machines:
+
+![
+
+## F
 
 [Throwback]: https://tryhackme.com/room/throwback
