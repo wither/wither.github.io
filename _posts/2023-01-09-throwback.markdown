@@ -28,7 +28,7 @@ categories: thm
  - [Privilege Escalation](#privilege-escalation)
  - [Flags](#prod-flags)
 6. [THROWBACK TIME](#throwback-time)
- - [Dumping Hashes & Passwords](#dumping-hashes-&-passwords) 
+ - [Dumping Hashes & Passwords](#dumping-hashes-and-passwords) 
 
 ## Enumeration
 ---
@@ -381,8 +381,9 @@ From here, I was able to read all three flags on the PROD machine:
 ![prod flags](/assets/img/posts/throwback/32_prod_flags.webp)
 
 ## THROWBACK TIME
+---
 
-### Dumping Hashes & Passwords
+### Dumping Hashes and Passwords
 
 Now that I had elevated privilages, I could run the stager in the command prompt and use admin-petersj as a privilaged agent: 
 
