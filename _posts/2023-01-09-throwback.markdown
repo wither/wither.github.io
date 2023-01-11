@@ -219,6 +219,8 @@ This is the mail server, which also has a web interface and login page. The gues
 
 ### MAIL Flags
 
+This authenticated web interface contained the first two flags to submit.
+
 I found the first flag in the **Welcome** email in the inbox:
 
 ![first flag](/assets/img/posts/throwback/9_flag1.webp)
@@ -280,7 +282,7 @@ And got a meterpreter shell as the user **BlaireJ** on their workstation:
 
 ### WS01 Flags
 
-From here, I found the 2 flags for the machine with ease. The first being on BlaireJ's desktop:
+From here, I found the two flags on the machine with ease (flags 5 & 6). The first being on BlaireJ's desktop:
 
 ![flag 5](/assets/img/posts/throwback/18_flag5.webp)
 
@@ -377,7 +379,7 @@ runas /savecred /user:admin-petersj /profile "cmd.exe"
 
 ### PROD Flags
 
-From here, I was able to read all three flags on the PROD machine:
+From here, I was able to read all three flags on the PROD machine (flags 7, 8 & 9):
 
 ![prod flags](/assets/img/posts/throwback/32_prod_flags.webp)
 
