@@ -311,6 +311,7 @@ hashcat -m 5600 -r OneRuleToRuleThemAll.rule --force petersj.hash.txt /content/w
 ```
 
 And successfully cracked PetersJ's password `Throwback317`:
+
 ![petersjs password cracked](/assets/img/posts/throwback/21_petersj_cracked.webp)
 
 ## THROWBACK-PROD
