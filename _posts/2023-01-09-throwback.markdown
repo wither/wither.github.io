@@ -629,4 +629,60 @@ The second was on MercerH's Desktop.
 ![dc01 root flag](/assets/img/posts/throwback/72_dc01rootflag
 .webp)
 
+## CORP-DC01
+---
+
+### Logging into CORP-DC01
+
+Then time to move into the CORPORATE.local trust via DC01. And the key was again, MercerH. The account that linked both domain controllers.
+
+After a long fight with proxy routes, I RDP'd into CORP-DC01 as MercerH. Once in, I again ran another reverse shell and re-routed my SOCKS proxy so that I could "see" into the rest of the CORP domain.
+
+![corp-dc01 proxy reroute](/assets/img/posts/throwback/79_reroute.webp)
+
+![corp-dc01 user rdp](/assets/img/posts/throwback/73_corpdc_shell.webp)
+
+After poking around the machine, I found a `server_update.txt` file on the Administrator's Desktop that contained information about two more virtual hosts, as well as information about company social media, specifically mentioning Github and Twitter.
+
+![server update txt](/assets/img/posts/throwback/74_server_update.webp)
+
+### OSINT
+
+So began my OSINT. I checked the company Twitter mentioned in the text file, and they are following the **Lead Developer Rikka Foxx** who also has their Github linked in their bio.
+
+![rikka foxx twitter](/assets/img/posts/throwback/75_rikka_twitter.webp)
+
+Then going through their Github repositories and code, I find the source for the Timekeep server, which still contained its **db_connect.php** file. The file used to allow interaction between the database and PHP. It also is used to store database login credentials and settings. The most up-to-date version of this file had the credentials redacted, however after checking the version history of this file, I found credentials for **DaviesJ**.
+
+![db connect creds](/assets/img/posts/throwback/76_dbconnect_credentials.webp)
+
+### Server Manager
+
+But for a while I wasn't sure where to use them. Until I started exploring the **Server Manager** and discovered another CORP machine in the DNS Manager: **CORP-ADT01**.
+
+![corp adt01 dns manager](/assets/img/posts/throwback/80_corpadt01)
+
+### Flags
+
+The user flag was on MercerH's Desktop.
+
+![corp dc01 user flag](/assets/img/posts/throwback/77_corpdc_userflag.webp)
+
+The root flag was on Administrator's Desktop.
+
+![corp dc01 root flag](/assets/img/posts/throwback/78_corpdc_rootflag.webp)
+
+A flag was on Rikka's Twitter.
+
+![twitter flag](/assets/img/posts/throwback/81_twitterflag.webp)
+
+The final flag was on Rikka's Github.
+
+![github flag](/assets/img/posts/throwback/82_githubflag.webp)
+
+## CORP-ADT01
+---
+
+
+
 [Throwback]: https://tryhackme.com/room/throwback
