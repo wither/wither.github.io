@@ -40,8 +40,8 @@ I tried really hard to organise this writeup, however with the nature of the lab
  - [Flags](#time-flags)
 7. [THROWBACK-DC01](#throwback-dc01)
  - [Password Spraying](#password-spraying-dc01)
- - [Abusing DSync Rights](#abusing-dsync-rights)
  - [Logging In](#logging-into-dc01)
+ - [Abusing DSync Rights](#abusing-dsync-rights)
  - [Flags](#dc01-flags)
 
 ## Enumeration
@@ -599,7 +599,7 @@ Referring back to BloodHound, this account had DCSync rights, which could easily
 
 ![backup dcsync in bloodhound](/assets/img/posts/throwback/67_dcsync_bloodhound.webp)
 
-## Abusing DCSync to Dump Credentials
+## Abusing DCSync Rights
 
 To use this account to escalate into the domain admin account, I used [secretsump.py](https://github.com/fortra/impacket/blob/master/examples/secretsdump.py) from Impacket with the following syntax:
 
@@ -607,7 +607,7 @@ To use this account to escalate into the domain admin account, I used [secretsum
 sudo proxychains python3 secretsdump.py -dc-ip 10.200.29.117 THROWBACK/backup@10.200.29.117
 ```
 
-To dump the credentials of all users on the domain controller.
+To dump the credentials of all users on the domain.
 
 ![dumped dcsync creds](/assets/img/posts/throwback/68_dcsync_dump.webp)
 
