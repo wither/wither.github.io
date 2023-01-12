@@ -21,6 +21,7 @@ I tried really hard to organise this writeup, however with the nature of the lab
  - [Credentials](#credentials)
  - [Flags](#fw01-flags)
 3. [THROWBACK-MAIL](#throwback-mail)
+ - [Logging In](#logging-into-mail)
  - [Password Spraying](#password-spraying-mail)
  - [Flags](#mail-flags)
 4. [THROWBACK WS01](#throwback-ws01)
@@ -226,7 +227,7 @@ p)
 ## Throwback MAIL
 ---
 
-### Logging in
+### Logging into MAIL
 
 This is the mail server, which also has a web interface and login page. The guest credentials to login `tbhguest:WelcomeTBH1!` were hardcoded just above the form.
 
