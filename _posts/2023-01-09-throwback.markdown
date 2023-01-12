@@ -37,8 +37,12 @@ I tried really hard to organise this writeup, however with the nature of the lab
 6. [THROWBACK-TIME](#throwback-time)
  - [Malicious Macro](#malicious-macro)
  - [SQL Database](#sql-database)
+ - [Flags](#time-flags)
 7. [THROWBACK-DC01](#throwback-dc01)
  - [Password Spraying](#password-spraying-dc01)
+ - [Abusing DSync Rights](#abusing-dsync-rights)
+ - [Logging In](#logging-into-dc01)
+ - [Flags](dc01-flags)
 
 ## Enumeration
 ---
@@ -46,7 +50,7 @@ I tried really hard to organise this writeup, however with the nature of the lab
 The initial network scope looks like this:
 ![image of initial network map](/assets/img/posts/throwback/network_layout.webp)
 
-Using nmap for initial enumeration, I discovered 3 of the in-scope machines and their open ports, as well as the name of the domain that they're apart of.
+Using nmap for initial enumeration, I discovered three of the in-scope machines and their open ports, as well as the name of the domain that they're apart of.
 
 **Command**
 ```shell
@@ -177,7 +181,7 @@ Host script results:
 
 ## Throwback FW01
 ---
-Going to the firewall's web interface, it confirmed that it is running **pfsense**, which has an administrator login.
+Going to the firewall's web interface, it confirmed that it is running **pfsense**, which has an administrator login panel.
 
 ![pfsense login page](/assets/img/posts/throwback/1_pfsense_login_page.webp)
 
@@ -214,9 +218,9 @@ xt files on the machine to find the flags:
 find / -iname "*.txt" 2>&1
 ```
 
-This way, I found both flags in these locations:.
+This way, I found both flags in these locations:
 
-![flags 3 and 4](/assets/img/posts/throwback/5_fw01_flags.web
+![fw01 flags](/assets/img/posts/throwback/5_fw01_flags.web
 p)
 
 ## Throwback MAIL
@@ -254,11 +258,11 @@ And successfully found these users' passwords:
 
 ### MAIL Flags
 
-I found the first flag in the "Welcome" email in guest the inbox:
+I found the first flag in the "Welcome" email in guest the inbox.
 
 ![first flag](/assets/img/posts/throwback/9_flag1.webp)
 
-And the second flag in the address book:
+And the second flag in the address book.
 
 ![second flag](/assets/img/posts/throwback/10_flag2.webp)
 
@@ -267,7 +271,7 @@ And the second flag in the address book:
 
 ### Phishing
 
-At this point however, I needed a way to move to another machine on the network. And the next target was WS01, an employee workstation.
+At this point however, I needed a way to move to another machine on the network. And the next target was **THROWBACK-WS01**, an employee workstation.
 
 To get access to a workstation, I chose to launch a phishing campaign against the employee email list, posing as IT support, telling employee's to update the note-taking software they're using, which would actually be a reverse shell pointing back to me.
 
@@ -281,11 +285,11 @@ And the following email as the vehicle:
 
 ![phishing email](/assets/img/posts/throwback/15_phishing_email.webp)
 
-Setup a handler using msfconsole:
+Then, I setup a shell handler using msfconsole:
 
 ![msfconsole handler](/assets/img/posts/throwback/16_handler.webp)
 
-And got a meterpreter shell as the user **BlaireJ** on their workstation:
+And got a meterpreter shell as the user **BlaireJ** on their workstation.
 
 ![meterpreter shell](/assets/img/posts/throwback/17_meterpreter_shell.webp)
 
@@ -297,7 +301,7 @@ Then, with the shell open, I used this responder command:
 sudo responder -I tun0 -dw -v
 ```
 
-To spoof the destination of LLMNR requests on the network, and recieve **PetersJ**'s NTMLv2 hash, which was intended for BlaireJ.
+To spoof the destination of LLMNR authorisation requests on the network, and intercept **PetersJ**'s NTMLv2 password hash. I personally found [this](https://predatech.co.uk/llmnr-nbt-ns-poisoning-windows-domain-environments/) article helpful in understanding this process and how it works.
 
 ![llmnr poisoning](/assets/img/posts/throwback/20_poison.webp)
 
@@ -321,6 +325,7 @@ And successfully cracked PetersJ's password `Throwback317`:
 Post exploitation, I used the [Empire](https://github.com/EmpireProject/Empire) framework as well as [Starkiller](https://github.com/BC-SECURITY/Starkiller), a front-end for it together as my C2 infrastructure.
 
 Very easily setup and ran with:
+
 ```shell
 sudo ./ps-empire server
 sudo ./starkiller-1.12.0.AppImage --no-sandbox
@@ -328,7 +333,7 @@ sudo ./starkiller-1.12.0.AppImage --no-sandbox
 
 ![empire and starkiller setup](/assets/img/posts/throwback/22_empire_starkiller.webp)
 
-And that opened access to the Starkiller panel running on localhost:
+And that opened access to the Starkiller panel running on localhost.
 
 ![starkiller](/assets/img/posts/throwback/23_starkiller_interface.webp)
 
@@ -352,7 +357,7 @@ xfreerdp /u:PetersJ /p:'Throwback317' /v:10.200.29.219
 
 ![xfreerdp](/assets/img/posts/throwback/26_xfreerdp.webp)
 
-Once I was in, I downloaded both the `launcher.bat` and `seatbelt.exe` files from a webserver on my machine:
+Once I was in, I downloaded both the `launcher.bat` and `seatbelt.exe` files from a webserver on my machine.
 
 ![wget seatbelt and launcher](/assets/img/posts/throwback/27_wget.webp)
 
@@ -552,7 +557,7 @@ Which I copied and formatted in Vim into a seperate document:
 
 ![formatted domain users](/assets/img/posts/throwback/63_formatted_domainusers.webp)
 
-### Flags
+### TIME Flags
 
 The first flag for this machine was from the password reset l
 ink in MurphyF's inbox:
@@ -573,12 +578,54 @@ And the third was the root flag on the Administrators Desktop:
 
 ### Password Spraying DC01
 
-I then used this list of users in combination with the weak password list that I used to spray the mail server, to spray t
-he Domain Controller (DC01) with crackmapexec:
+I then used the list of domain users from the databse in combination with the weak password list that I used to spray the mail server, to password spray the Domain Controller (DC01) with crackmapexec:
 
 ```shell
 proxychains -q crackmapexec smb 10.200.29.117 -u domainusers.
 txt -p mail_pass.txt --continue-on-success
 ```
+
+Doing this, I found the domain user **JeffersD**'s password `Throwback2020`.
+
+![jeffersd account password](/assets/img/posts/throwback/65_jeffersd_dc01.webp)
+
+## Logging into DC01
+
+I logged into the domain controller with these new credentials to find a note from the domain admin in JeffersD's Documents folder containing an account called **backup**'s password.
+
+![backup credentials in documents](/assets/img/posts/throwback/66_backupcreds.webp)
+
+Referring back to BloodHound, this account had DCSync rights, which could easily be abused.
+
+![backup dcsync in bloodhound](/assets/img/posts/throwback/67_dcsync_bloodhound.webp)
+
+## Abusing DCSync to Dump Credentials
+
+To use this account to escalate into the domain admin account, I used [secretsump.py](https://github.com/fortra/impacket/blob/master/examples/secretsdump.py) from Impacket with the following syntax:
+
+```shell
+sudo proxychains python3 secretsdump.py -dc-ip 10.200.29.117 THROWBACK/backup@10.200.29.117
+```
+
+To dump the credentials of all users on the domain controller.
+
+![dumped dcsync creds](/assets/img/posts/throwback/68_dcsync_dump.webp)
+
+Including the domain admin **MercerH**, who's password I was able to crack again using hashcat and penglab.
+
+![mercerh password cracked](/assets/img/posts/throwback/69_mercerh_password.webp)
+
+![domain admin logged in](/assets/img/posts/throwback/70_dc01admin.webp)
+
+### DC01 Flags
+
+The first flag was on JeffersD's Desktop.
+
+![dc01 user flag](/assets/img/posts/throwback/71_dc01userflag.webp)
+
+The second was on MercerH's Desktop.
+
+![dc01 root flag](/assets/img/posts/throwback/72_dc01rootflag
+.webp)
 
 [Throwback]: https://tryhackme.com/room/throwback
