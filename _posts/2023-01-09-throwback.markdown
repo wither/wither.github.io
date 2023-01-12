@@ -41,7 +41,7 @@ I tried really hard to organise this writeup, however with the nature of the lab
 7. [THROWBACK-DC01](#throwback-dc01)
  - [Password Spraying](#password-spraying-dc01)
  - [Logging In](#logging-into-dc01)
- - [Abusing DSync Rights](#abusing-dsync-rights)
+ - [Abusing DCSync Rights](#abusing-dcsync-rights)
  - [Flags](#dc01-flags)
 
 ## Enumeration
@@ -589,7 +589,7 @@ Doing this, I found the domain user **JeffersD**'s password `Throwback2020`.
 
 ![jeffersd account password](/assets/img/posts/throwback/65_jeffersd_dc01.webp)
 
-## Logging into DC01
+### Logging into DC01
 
 I logged into the domain controller with these new credentials to find a note from the domain admin in JeffersD's Documents folder containing an account called **backup**'s password.
 
@@ -599,7 +599,7 @@ Referring back to BloodHound, this account had DCSync rights, which could easily
 
 ![backup dcsync in bloodhound](/assets/img/posts/throwback/67_dcsync_bloodhound.webp)
 
-## Abusing DCSync Rights
+### Abusing DCSync Rights
 
 To use this account to escalate into the domain admin account, I used [secretsump.py](https://github.com/fortra/impacket/blob/master/examples/secretsdump.py) from Impacket with the following syntax:
 
