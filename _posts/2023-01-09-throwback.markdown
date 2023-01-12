@@ -42,7 +42,7 @@ I tried really hard to organise this writeup, however with the nature of the lab
  - [Password Spraying](#password-spraying-dc01)
  - [Abusing DSync Rights](#abusing-dsync-rights)
  - [Logging In](#logging-into-dc01)
- - [Flags](dc01-flags)
+ - [Flags](#dc01-flags)
 
 ## Enumeration
 ---
