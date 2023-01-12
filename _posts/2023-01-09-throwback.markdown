@@ -44,6 +44,12 @@ I tried really hard to organise this writeup, however with the nature of the lab
  - [Logging In](#logging-into-dc01)
  - [Abusing DCSync Rights](#abusing-dcsync-rights)
  - [Flags](#dc01-flags)
+8. [CORP-DC01](#corp-dc01)
+ - [Logging In](#logging-into-corp-dc01)
+ - [OSINT](#osint)
+ - [Server Manager](#server-manager)
+ - [Flags](#corp-dc01-flags)
+9. [CORP-ADT01](#corp-adt01)
 
 ## Enumeration
 ---
@@ -634,7 +640,7 @@ The second was on MercerH's Desktop.
 
 ### Logging into CORP-DC01
 
-Then time to move into the CORPORATE.local trust via DC01. And the key was again, MercerH. The account that linked both domain controllers.
+Then time to move into the **CORPORATE.local** trust via DC01. And the key was again, **MercerH**. The account that linked both domain controllers.
 
 After a long fight with proxy routes, I RDP'd into CORP-DC01 as MercerH. Once in, I again ran another reverse shell and re-routed my SOCKS proxy so that I could "see" into the rest of the CORP domain.
 
@@ -642,7 +648,7 @@ After a long fight with proxy routes, I RDP'd into CORP-DC01 as MercerH. Once in
 
 ![corp-dc01 user rdp](/assets/img/posts/throwback/73_corpdc_shell.webp)
 
-After poking around the machine, I found a `server_update.txt` file on the Administrator's Desktop that contained information about two more virtual hosts, as well as information about company social media, specifically mentioning Github and Twitter.
+After poking around the machine, I found a `server_update.txt` file on the Administrator's Desktop that contained information about two more virtual hosts, as well as information about company social media, specifically mentioning **Github** and **Twitter**.
 
 ![server update txt](/assets/img/posts/throwback/74_server_update.webp)
 
@@ -660,9 +666,9 @@ Then going through their Github repositories and code, I find the source for the
 
 But for a while I wasn't sure where to use them. Until I started exploring the **Server Manager** and discovered another CORP machine in the DNS Manager: **CORP-ADT01**.
 
-![corp adt01 dns manager](/assets/img/posts/throwback/80_corpadt01)
+![corp adt01 dns manager](/assets/img/posts/throwback/80_corpadt01.webp)
 
-### Flags
+### CORP DC01 Flags
 
 The user flag was on MercerH's Desktop.
 
