@@ -12,7 +12,7 @@ categories: thm
 ## Contents
 ---
 
-I tried my really hard to organise this writeup, however with the nature of the lab I often needed to move to and from machines often, therefore it may jump around a little between topics and machines so use this contents list to find exactly what you need:
+I tried really hard to organise this writeup, however with the nature of the lab I often needed to move to and from machines often, therefore it may jump around a little between topics and machines so use this contents list to find exactly what you need:
 
 1. [Network Enumeration](#enumeration)
 2. [THROWBACK-FW01](#throwback-fw01)
