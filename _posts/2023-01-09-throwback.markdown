@@ -35,7 +35,7 @@ I tried really hard to organise this writeup, however with the nature of the lab
  - [Dumping Hashes and Passwords](#dumping-hashes-and-passwords) 
  - [Flags](#prod-flags)
 6. [THROWBACK-TIME](#throwback-time)
- - [Malicious Macro](#malicious-macro)
+ - [Malicious VBA Macro](#malicious-vba-macro)
  - [SQL Database](#sql-database)
  - [Flags](#time-flags)
 7. [THROWBACK-DC01](#throwback-dc01)
