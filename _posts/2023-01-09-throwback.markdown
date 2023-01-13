@@ -689,6 +689,18 @@ The final flag was on Rikka's Github.
 ## CORP-ADT01
 ---
 
+DaviesJ's credentials worked on CORP-ADT01.
 
+![corp adt01 login](/assets/img/posts/throwback/83_corpadt01_daviesj.webp)
+
+After looking around the machine again, there was another file in the Administrator's `Documents` folder. This time, `email_update.txt`. This document revealed information about the email address structure, as well as again referencing **mail.corperate.local**.
+
+![email update txt]((/assets/img/posts/throwback/84_emailupdate.webp)
+
+I had to get credentials for this server. So again, I needed to incorperate more OSINT.
+
+### More OSINT
+
+This time, I used [LeetLinked](https://github.com/Sq00ky/LeetLinked), an OSINT tool focused on targeting companies and individuals on LinkedIn.
 
 [Throwback]: https://tryhackme.com/room/throwback
