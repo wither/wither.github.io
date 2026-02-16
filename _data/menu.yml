@@ -1,0 +1,16 @@
+entries:
+  - title: home
+    url: /
+
+  - title: about
+    url: /about/
+
+  - title: writeups
+    url: /posts/
+
+  - title: cv 
+    url: /assets/cv.pdf
+
+  - title: github
+    url: https://github.com/wither
+
